@@ -1,5 +1,5 @@
 # this object describes the borrowlist item(book) and all their attributes
-class BorrowListItem:
+class BorrowListItem(object):
 
     def __init__(self, name, category, description=None, borrowlist=None):
         self.name = name

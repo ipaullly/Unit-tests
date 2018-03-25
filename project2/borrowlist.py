@@ -1,6 +1,6 @@
 from borrowlist_item import BorrowListItem
 
-class BorrowList:
+class BorrowList(object):
 
     def __init__(self, name, details=None, items=None, owner=None):
         self.name = name

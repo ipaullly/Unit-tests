@@ -1,9 +1,8 @@
 #this tests the capabilities a user has in the website
 import unittest
-import app
-from app.borrowlist import BorrowList
+from project2.borrowlist import BorrowList
 
-from app.borrowlist_item import BorrowListItem
+from project2.borrowlist_item import BorrowListItem
 
 class TestBorrowList(unittest.TestCase): 
     def setUp(self):

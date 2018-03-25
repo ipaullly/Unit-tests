@@ -1,5 +1,5 @@
 import unittest
-from borrowlist_item import BorrowListItem
+from project2.borrowlist_item import BorrowListItem
 
 class TestBorrowListItem(unittest.TestCase):
     def setUp(self):
