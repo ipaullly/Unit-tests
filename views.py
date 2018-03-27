@@ -2,13 +2,52 @@ from flask import request
 from flask import session
 from flask import flash
 from flask import url_for, redirect, render_template
-from app.borrowlist import BorrowList
-from app.admin import BorrowListAdmin
-from user.user import User
+from app.borrowlist.borrowlist import BorrowList
+from app.borrowlist.admin import BorrowListAdmin
+from app.user.user import User
 
-from Project2 import app
+from app import app
 #for the case of non-persistent, we require a list for authenticated user
 authenticated_users = []
+#creating user account
+
+@app.route('/api/v1/auth/register', methods=['POST'])
+def register():
+    email = request.form.get('email')
+    password = request.form.get('password')
+    name = request.form.get('username')
+    for user in authenticated_users:
+        if user.email == email:
+            flash('{} is already registered, please login.'.format(email))
+            return render_template("index.html")
+    user = User(email, password, name)
+    authenticated_users.append(user)
+    flash("{} has succesfully created an account.".format(user.name))
+    return redirect('/')
+
+#api endpoint for log in
+@app.route('/api/v1/auth/login', methods=['POST'])
+def login():
+    email = request.form.get('email')
+    password = request.form.get('password')
+    for user in authenticated_users:
+        if user.email == email:
+            if user.password == password:
+                session['logged_in'] = True
+                session['user'] = email
+                return redirect(url_for("Profile page"))
+            else:
+                flash("wrong login details")
+                return render_template("index.html")
+    flash("You are not among the authenticated user list")
+    return redirect("/")
+#api to logout 
+@app.route('/api/v1/auth/logout', methods=['POST'])
+def logout():
+    session['logged_in'] = False
+    session.pop('user', None)
+    flash("You have signed out")
+    return redirect("/")
 #creating an object for the user session required to CRUD the borrowlists and borrowlist_items
 def get_session_user():
     for user in authenticated_users:
@@ -36,7 +75,7 @@ def add_borrowlist_item(borrowlist_name):
         flash("You currently not in session.")
         return redirect("/")
 #to view all books
-@app.route('/api/v2/books', methods=['GET'])
+@app.route('/api/v1/books', methods=['GET'])
 def display_borrowlist_items(borrowlist_name):
     if get_session_user() is not None:
         session_user = get_session_user()
@@ -53,7 +92,7 @@ def display_borrowlist_items(borrowlist_name):
                 return render_template("index.html")
     
 #The API that sends information to update borrowlist items (books)
-@app.route('/api/v3/books/<bookld>', methods=['PUT'])
+@app.route('/api/v1/books/<bookld>', methods=['PUT'])
 def modify_borrowlist_item(borrowlist_name, item_name):
     name = request.form.get('item_name')
     description = request.form.get('item_desc')
@@ -78,7 +117,7 @@ def modify_borrowlist_item(borrowlist_name, item_name):
 
 
 #the API that removes a borrowlist item(book) from a borrowlist
-@app.route('/api/v4/books/<bookld>', methods=['DELETE'])
+@app.route('/api/v1/books/<bookld>', methods=['DELETE'])
 def delete_borrowlist_item(borrowlist_name, item_name):
     if get_session_user is not None:
         session_user = get_session_user()
