@@ -10,6 +10,11 @@ from app import app
 #for the case of non-persistent, we require a list for authenticated user
 authenticated_users = []
 #creating user account
+@app.route('/')
+def index():
+
+  session['logged_in'] = False
+  return render_template("index.html")
 
 @app.route('/api/v1/auth/register', methods=['POST'])
 def register():
