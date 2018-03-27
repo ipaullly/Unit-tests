@@ -1,4 +1,4 @@
-from Project2.project2.admin import BorrowListAdmin
+from app.borrowlist.admin import BorrowListAdmin
 
 class User(BorrowListAdmin):
     def __init__(self, email, password, name):

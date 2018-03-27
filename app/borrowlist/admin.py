@@ -1,6 +1,6 @@
 
 
-from Project2.project2.borrowlist import BorrowList
+from app.borrowlist.borrowlist import BorrowList
 
 
 class BorrowListAdmin(object):

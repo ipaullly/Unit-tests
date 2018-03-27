@@ -1,4 +1,4 @@
-from borrowlist_item import BorrowListItem
+from app.borrowlist.borrowlist_item import BorrowListItem
 
 class BorrowList(object):
 
